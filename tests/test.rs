@@ -101,3 +101,26 @@ fn check_call() {
     let result = Ok(Type::Bool);
     assert!(test_driver(expr, result))
 }
+
+#[test]
+fn check_complicated_call() {
+    let a = Expr::Variable('x');
+    let f = Expr::Function(FunExp {
+        argument: Box::new(a),
+        arg_type: Type::Number,
+        body: Box::new(Expr::Number(5.0)),
+    });
+
+    let arg1 = Expr::Number(5.0);
+    let c1 = Expr::Call(CallExp {
+        caller: Box::new(f.clone()),
+        callee: Box::new(arg1),
+    });
+
+    let c2 = Expr::Call(CallExp {
+        caller: Box::new(f),
+        callee: Box::new(c1),
+    });
+
+    assert!(test_driver(c2, Ok(Type::Number)))
+}
