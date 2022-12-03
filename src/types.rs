@@ -10,8 +10,8 @@ pub enum Operation {
 impl fmt::Display for Operation {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Operation::Add  => write!(f, "+"),
-            Operation::Sub  => write!(f, "-"),
+            Operation::Add => write!(f, "+"),
+            Operation::Sub => write!(f, "-"),
             Operation::Less => write!(f, "<"),
         }
     }
