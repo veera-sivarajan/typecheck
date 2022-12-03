@@ -22,7 +22,13 @@ pub enum Type {
     Number,
     String,
     Bool,
-    Function(Box<(Type, Type)>),
+    Function(FunType),
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub struct FunType {
+    pub input: Box<Type>,
+    pub output: Box<Type>,
 }
 
 pub enum Expr {

@@ -1,5 +1,5 @@
 mod types;
-use crate::types::{Type, Operation, Expr, BinExp, IfExp, FunExp, CallExp};
+use crate::types::{Type, FunType, Operation, Expr, BinExp, IfExp, FunExp, CallExp};
 use std::collections::HashMap;
 
 fn type_check(
@@ -40,12 +40,16 @@ fn type_check(
             };
             context.insert(var, value.arg_type.clone());
             let t2 = type_check(&value.body, context, op_type)?;
-            Ok(Type::Function(Box::new((value.arg_type.clone(), t2))))
+            // Ok(Type::Function(Box::new((value.arg_type.clone(), t2))))
+            Ok(Type::Function(FunType {
+                input: Box::new(value.arg_type.clone()),
+                output: Box::new(t2),
+            }))
         }
         Expr::Call(value) => {
             if let Ok(Type::Function(ty)) = type_check(&value.caller, context, op_type) {
-                if ty.0 == type_check(&value.callee, context, op_type)? {
-                    Ok(ty.1)
+                if *ty.input == type_check(&value.callee, context, op_type)? {
+                    Ok(*ty.output)
                 } else {
                     Err(String::from("Function argument expects a different type."))
                 }
@@ -136,7 +140,10 @@ mod tests {
             arg_type: Type::Bool,
             body: Box::new(b),
         });
-        let result = Ok(Type::Function(Box::new((Type::Bool, Type::Bool))));
+        let result = Ok(Type::Function(FunType {
+            input: Box::new(Type::Bool),
+            output: Box::new(Type::Bool),
+        }));
         assert!(test_driver(exp, result))
     }
 
