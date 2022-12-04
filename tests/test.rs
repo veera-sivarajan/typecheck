@@ -1,7 +1,10 @@
 use std::collections::HashMap;
 use typecheck::types::{BinExp, CallExp, Expr, FunExp, FunType, IfExp, Operation, Type};
 
-fn test_driver(input: typecheck::types::Expr, output: Result<Type, String>) -> bool {
+fn test_driver(
+    input: typecheck::types::Expr,
+    output: Result<Type, String>
+) -> bool {
     let mut context = HashMap::new();
     context.insert('x', Type::Number);
     context.insert('y', Type::Bool);
@@ -45,11 +48,7 @@ fn check_variable() {
 fn check_binary() {
     let a = Expr::Number(1.0);
     let b = Expr::Number(2.0);
-    let exp = Expr::Binary(BinExp {
-        left: Box::new(a),
-        right: Box::new(b),
-        operator: Operation::Add,
-    });
+    let exp = Expr::Binary(BinExp::new(a, Operation::Add, b));
     let result = Ok(Type::Number);
     assert!(test_driver(exp, result))
 }
@@ -59,11 +58,11 @@ fn check_conditional() {
     let a = Expr::Number(1.0);
     let b = Expr::Number(2.0);
     let c = Expr::Bool(false);
-    let exp = Expr::Conditional(IfExp {
-        condition: Box::new(c),
-        then: Box::new(a),
-        elze: Box::new(b),
-    });
+    let exp = Expr::Conditional(IfExp::new(
+        c,
+        a,
+        Expr::Binary(BinExp::new(Expr::Number(1.0), Operation::Add, b)),
+    ));
     let result = Ok(Type::Number);
     assert!(test_driver(exp, result))
 }
@@ -72,11 +71,7 @@ fn check_conditional() {
 fn check_function() {
     let a = Expr::Variable('y');
     let b = Expr::Bool(false);
-    let exp = Expr::Function(FunExp {
-        argument: Box::new(a),
-        arg_type: Type::Bool,
-        body: Box::new(b),
-    });
+    let exp = Expr::Function(FunExp::new(a, Type::Bool, b));
     let result = Ok(Type::Function(FunType {
         input: Box::new(Type::Bool),
         output: Box::new(Type::Bool),

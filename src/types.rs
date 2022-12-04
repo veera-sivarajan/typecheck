@@ -31,6 +31,15 @@ pub struct FunType {
     pub output: Box<Type>,
 }
 
+impl FunType {
+    pub fn new(input: Type, output: Type) -> Self {
+        Self {
+            input: Box::new(input),
+            output: Box::new(output),
+        }
+    }
+}
+
 #[derive(Clone)]
 pub enum Expr {
     Number(f64),
@@ -50,11 +59,32 @@ pub struct BinExp {
     pub right: Box<Expr>,
 }
 
+impl BinExp {
+    pub fn new(left: Expr, operator: Operation, right: Expr) -> Self {
+        Self {
+            left: Box::new(left),
+            operator,
+            right: Box::new(right),
+        }
+    }
+}
+
 #[derive(Clone)]
 pub struct IfExp {
     pub condition: Box<Expr>,
     pub then: Box<Expr>,
     pub elze: Box<Expr>,
+}
+
+
+impl IfExp {
+    pub fn new(cond: Expr, then: Expr, elze: Expr) -> Self {
+        Self {
+            condition: Box::new(cond),
+            then: Box::new(then),
+            elze: Box::new(elze),
+        }
+    }
 }
 
 #[derive(Clone)]
@@ -64,8 +94,27 @@ pub struct FunExp {
     pub body: Box<Expr>,
 }
 
+impl FunExp {
+    pub fn new(argument: Expr, arg_type: Type, body: Expr) -> Self {
+        Self {
+            argument: Box::new(argument),
+            arg_type,
+            body: Box::new(body),
+        }
+    }
+}
+
 #[derive(Clone)]
 pub struct CallExp {
     pub caller: Box<Expr>,
     pub callee: Box<Expr>,
+}
+
+impl CallExp {
+    pub fn new(ler: Expr, lee: Expr) -> Self {
+        Self {
+            caller: Box::new(ler),
+            callee: Box::new(lee),
+        }
+    }
 }
