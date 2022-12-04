@@ -76,7 +76,6 @@ pub struct IfExp {
     pub elze: Box<Expr>,
 }
 
-
 impl IfExp {
     pub fn new(cond: Expr, then: Expr, elze: Expr) -> Self {
         Self {

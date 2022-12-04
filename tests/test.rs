@@ -1,10 +1,7 @@
 use std::collections::HashMap;
 use typecheck::types::{BinExp, CallExp, Expr, FunExp, FunType, IfExp, Operation, Type};
 
-fn test_driver(
-    input: typecheck::types::Expr,
-    output: Result<Type, String>
-) -> bool {
+fn test_driver(input: typecheck::types::Expr, output: Result<Type, String>) -> bool {
     let mut context = HashMap::new();
     context.insert('x', Type::Number);
     context.insert('y', Type::Bool);
